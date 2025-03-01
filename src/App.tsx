@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useImmer } from 'use-immer';
 
 const initialPosition = {
   x: 0,
@@ -6,34 +7,28 @@ const initialPosition = {
 };
 
 export default function Canvas() {
-  const [shape, setShape] = useState({
+  const [shape, setShape] = useImmer({
     color: 'orange',
     position: initialPosition
   });
 
   function handleMove(dx, dy) {
-    setShape(
-      {
-        ...shape,
-        position: {
-          x: shape.position.x + dx,
-          y: shape.position.y + dy
-        }
-      }
-    )
+    setShape(shape => {
+      shape.position.x += dx;
+      shape.position.y += dy;  
+    })
   }
 
   function handleColorChange(e) {
-    setShape({
-      ...shape,
-      color: e.target.value
+    setShape(shape => {
+      shape.color = e.target.value;
     });
   }
 
   return (
     <>
       <select
-        title='hello'
+        title="color"
         value={shape.color}
         onChange={handleColorChange}
       >
@@ -55,7 +50,6 @@ export default function Canvas() {
   );
 }
 
-
 export function Box({
   children,
   color,
@@ -65,7 +59,7 @@ export function Box({
   const [
     lastCoordinates,
     setLastCoordinates
-  ] = useState<{x:number,y:number}>();
+  ] = useState<{x:number, y: number}>();
 
   function handlePointerDown(e) {
     e.target.setPointerCapture(e.pointerId);
@@ -114,6 +108,7 @@ export function Box({
     >{children}</div>
   );
 }
+
 
 export function Background({
   position
