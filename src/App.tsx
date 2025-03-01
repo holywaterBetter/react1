@@ -1,128 +1,51 @@
 import { useState } from 'react';
-import { useImmer } from 'use-immer';
 
-const initialPosition = {
-  x: 0,
-  y: 0
-};
+const initialProducts = [{
+  id: 0,
+  name: 'Baklava',
+  count: 1,
+}, {
+  id: 1,
+  name: 'Cheese',
+  count: 5,
+}, {
+  id: 2,
+  name: 'Spaghetti',
+  count: 2,
+}];
 
-export default function Canvas() {
-  const [shape, setShape] = useImmer({
-    color: 'orange',
-    position: initialPosition
-  });
-
-  function handleMove(dx, dy) {
-    setShape(shape => {
-      shape.position.x += dx;
-      shape.position.y += dy;  
-    })
-  }
-
-  function handleColorChange(e) {
-    setShape(shape => {
-      shape.color = e.target.value;
-    });
-  }
-
-  return (
-    <>
-      <select
-        title="color"
-        value={shape.color}
-        onChange={handleColorChange}
-      >
-        <option value="orange">orange</option>
-        <option value="lightpink">lightpink</option>
-        <option value="aliceblue">aliceblue</option>
-      </select>
-      <Background
-        position={initialPosition}
-      />
-      <Box
-        color={shape.color}
-        position={shape.position}
-        onMove={handleMove}
-      >
-        Drag me!
-      </Box>
-    </>
-  );
-}
-
-export function Box({
-  children,
-  color,
-  position,
-  onMove
-}) {
+export default function ShoppingCart() {
   const [
-    lastCoordinates,
-    setLastCoordinates
-  ] = useState<{x:number, y: number}>();
+    products,
+    setProducts
+  ] = useState(initialProducts)
 
-  function handlePointerDown(e) {
-    e.target.setPointerCapture(e.pointerId);
-    setLastCoordinates({
-      x: e.clientX,
-      y: e.clientY,
-    });
-  }
-
-  function handlePointerMove(e) {
-    if (lastCoordinates) {
-      setLastCoordinates({
-        x: e.clientX,
-        y: e.clientY,
-      });
-      const dx = e.clientX - lastCoordinates.x;
-      const dy = e.clientY - lastCoordinates.y;
-      onMove(dx, dy);
-    }
-  }
-
-  function handlePointerUp(e) {
-    setLastCoordinates(undefined);
+  function handleIncreaseClick(productId) {
+    setProducts(products.map(product => {
+      if(product.id === productId) {
+        return {
+          ...product,
+          count: product.count + 1
+        }
+      }
+      return product;
+    }))
   }
 
   return (
-    <div
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      style={{
-        width: 100,
-        height: 100,
-        cursor: 'grab',
-        backgroundColor: color,
-        position: 'absolute',
-        border: '1px solid black',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        transform: `translate(
-          ${position.x}px,
-          ${position.y}px
-        )`,
-      }}
-    >{children}</div>
+    <ul>
+      {products.map(product => (
+        <li key={product.id}>
+          {product.name}
+          {' '}
+          (<b>{product.count}</b>)
+          <button onClick={() => {
+            handleIncreaseClick(product.id);
+          }}>
+            +
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
-
-
-export function Background({
-  position
-}) {
-  return (
-    <div style={{
-      position: 'absolute',
-      transform: `translate(
-        ${position.x}px,
-        ${position.y}px
-      )`,
-      width: 250,
-      height: 250,
-      backgroundColor: 'rgba(200, 200, 0, 0.2)',
-    }} />
-  );
-};
