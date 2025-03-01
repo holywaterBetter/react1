@@ -1,50 +1,133 @@
 import { useState } from 'react';
 
-export default function Form() {
-  const [person, setPerson] = useState({
-    firstName: 'Barbara',
-    lastName: 'Hepworth',
-    email: 'bhepworth@sculpture.com'
+const initialPosition = {
+  x: 0,
+  y: 0
+};
+
+export default function Canvas() {
+  const [shape, setShape] = useState({
+    color: 'orange',
+    position: initialPosition
   });
 
-  function handlePersonChange(e) {
-    setPerson({
-      ...person,
-      [e.target.name]: e.target.value
-    })
+  function handleMove(dx, dy) {
+    setShape(
+      {
+        ...shape,
+        position: {
+          x: shape.position.x + dx,
+          y: shape.position.y + dy
+        }
+      }
+    )
+  }
+
+  function handleColorChange(e) {
+    setShape({
+      ...shape,
+      color: e.target.value
+    });
   }
 
   return (
     <>
-      <label>
-        First name:
-        <input
-          name='firstName'
-          value={person.firstName}
-          onChange={handlePersonChange}
-        />
-      </label>
-      <label>
-        Last name:
-        <input
-          name='lastName'
-          value={person.lastName}
-          onChange={handlePersonChange}
-        />
-      </label>
-      <label>
-        Email:
-        <input
-          name='email'
-          value={person.email}
-          onChange={handlePersonChange}
-        />
-      </label>
-      <p>
-        {person.firstName}{' '}
-        {person.lastName}{' '}
-        ({person.email})
-      </p>
+      <select
+        title='hello'
+        value={shape.color}
+        onChange={handleColorChange}
+      >
+        <option value="orange">orange</option>
+        <option value="lightpink">lightpink</option>
+        <option value="aliceblue">aliceblue</option>
+      </select>
+      <Background
+        position={initialPosition}
+      />
+      <Box
+        color={shape.color}
+        position={shape.position}
+        onMove={handleMove}
+      >
+        Drag me!
+      </Box>
     </>
   );
 }
+
+
+export function Box({
+  children,
+  color,
+  position,
+  onMove
+}) {
+  const [
+    lastCoordinates,
+    setLastCoordinates
+  ] = useState<{x:number,y:number}>();
+
+  function handlePointerDown(e) {
+    e.target.setPointerCapture(e.pointerId);
+    setLastCoordinates({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  }
+
+  function handlePointerMove(e) {
+    if (lastCoordinates) {
+      setLastCoordinates({
+        x: e.clientX,
+        y: e.clientY,
+      });
+      const dx = e.clientX - lastCoordinates.x;
+      const dy = e.clientY - lastCoordinates.y;
+      onMove(dx, dy);
+    }
+  }
+
+  function handlePointerUp(e) {
+    setLastCoordinates(undefined);
+  }
+
+  return (
+    <div
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      style={{
+        width: 100,
+        height: 100,
+        cursor: 'grab',
+        backgroundColor: color,
+        position: 'absolute',
+        border: '1px solid black',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        transform: `translate(
+          ${position.x}px,
+          ${position.y}px
+        )`,
+      }}
+    >{children}</div>
+  );
+}
+
+export function Background({
+  position
+}) {
+  return (
+    <div style={{
+      position: 'absolute',
+      transform: `translate(
+        ${position.x}px,
+        ${position.y}px
+      )`,
+      width: 250,
+      height: 250,
+      backgroundColor: 'rgba(200, 200, 0, 0.2)',
+    }} />
+  );
+};
