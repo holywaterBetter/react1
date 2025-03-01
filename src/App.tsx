@@ -1,26 +1,50 @@
 import { useState } from 'react';
 
-export default function FeedbackForm() {
-  const [isSent, setIsSent] = useState(false);
-  const [message, setMessage] = useState('');
-  if (isSent) {
-    return <h1>Thank you!</h1>;
-  } else {
-    // eslint-disable-next-line
+export default function Form() {
+  const [person, setPerson] = useState({
+    firstName: 'Barbara',
+    lastName: 'Hepworth',
+    email: 'bhepworth@sculpture.com'
+  });
 
-    return (
-      <form onSubmit={e => {
-        alert(`Sending: "${message}"`);
-        setIsSent(true);
-      }}>
-        <textarea
-          placeholder="Message"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-        />
-        <br />
-        <button type="submit">Send</button>
-      </form>
-    );
+  function handlePersonChange(e) {
+    setPerson({
+      ...person,
+      [e.target.name]: e.target.value
+    })
   }
+
+  return (
+    <>
+      <label>
+        First name:
+        <input
+          name='firstName'
+          value={person.firstName}
+          onChange={handlePersonChange}
+        />
+      </label>
+      <label>
+        Last name:
+        <input
+          name='lastName'
+          value={person.lastName}
+          onChange={handlePersonChange}
+        />
+      </label>
+      <label>
+        Email:
+        <input
+          name='email'
+          value={person.email}
+          onChange={handlePersonChange}
+        />
+      </label>
+      <p>
+        {person.firstName}{' '}
+        {person.lastName}{' '}
+        ({person.email})
+      </p>
+    </>
+  );
 }
