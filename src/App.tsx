@@ -1,19 +1,16 @@
-const poem = {
-  lines: [
-    'I write, erase, rewrite',
-    'Erase again, and then',
-    'A poppy blooms.'
-  ]
-};
+export default function LightSwitch() {
+  function handleClick() {
+    let bodyStyle = document.body.style;
+    if (bodyStyle.backgroundColor === 'black') {
+      bodyStyle.backgroundColor = 'white';
+    } else {
+      bodyStyle.backgroundColor = 'black';
+    }
+  }
 
-export default function Poem() {
   return (
-    <article>
-      {poem.lines.map((line, index) => <>
-        <p key={index}>{line}</p>
-        {index < poem.lines.length - 1 && <hr />}
-      </>
-      )}
-    </article>
+    <button onClick={handleClick}>
+      Toggle the lights
+    </button>
   );
 }
