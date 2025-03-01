@@ -1,64 +1,30 @@
-export default function List() {
-  let temp = people.filter(person => person.profession === 'chemist');
-  temp = [...temp, ...people.filter(person => person.profession !== 'chemist')];
 
-  const listItems = temp.map(person =>
-    <li key={person.id}>
-      <img
-        src={getImageUrl(person)}
-        alt={person.name}
-      />
-      <p>
-        <b>{person.name}:</b>
-        {' ' + person.profession + ' '}
-        known for {person.accomplishment}
-      </p>
-    </li>
-  );
+export default function RecipeList() {
   return (
-    <article>
-      <h1>Scientists</h1>
-      <ul>{listItems}</ul>
-    </article>
+    <div>
+      <h1>Recipes</h1>
+      {recipes.map(recipe => (
+        <div key={recipe.id}>
+          <h2>{recipe.name}</h2>
+          <ul>
+            {recipe.ingredients.map(ingredient => <li key={ingredient}>{ingredient}</li>)}
+          </ul>
+        </div>
+      ))};
+    </div>
   );
 }
 
-export const people = [{
-  id: 0,
-  name: 'Creola Katherine Johnson',
-  profession: 'mathematician',
-  accomplishment: 'spaceflight calculations',
-  imageId: 'MK3eW3A'
+export const recipes = [{
+  id: 'greek-salad',
+  name: 'Greek Salad',
+  ingredients: ['tomatoes', 'cucumber', 'onion', 'olives', 'feta']
 }, {
-  id: 1,
-  name: 'Mario José Molina-Pasquel Henríquez',
-  profession: 'chemist',
-  accomplishment: 'discovery of Arctic ozone hole',
-  imageId: 'mynHUSa'
+  id: 'hawaiian-pizza',
+  name: 'Hawaiian Pizza',
+  ingredients: ['pizza crust', 'pizza sauce', 'mozzarella', 'ham', 'pineapple']
 }, {
-  id: 2,
-  name: 'Mohammad Abdus Salam',
-  profession: 'physicist',
-  accomplishment: 'electromagnetism theory',
-  imageId: 'bE7W1ji'
-}, {
-  id: 3,
-  name: 'Percy Lavon Julian',
-  profession: 'chemist',
-  accomplishment: 'pioneering cortisone drugs, steroids and birth control pills',
-  imageId: 'IOjWm71'
-}, {
-  id: 4,
-  name: 'Subrahmanyan Chandrasekhar',
-  profession: 'astrophysicist',
-  accomplishment: 'white dwarf star mass calculations',
-  imageId: 'lrWQx8l'
+  id: 'hummus',
+  name: 'Hummus',
+  ingredients: ['chickpeas', 'olive oil', 'garlic cloves', 'lemon', 'tahini']
 }];
-
-export function getImageUrl(person) {
-  return (
-    'https://i.imgur.com/' +
-    person.imageId +
-    's.jpg'
-  );
-}
