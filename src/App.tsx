@@ -1,47 +1,13 @@
-import { useState } from 'react';
+import AddTask from './AddTask';
+import TaskContext from './TaskContext';
+import TaskList from './TaskList';
 
-export default function App() {
-  const [reverse, setReverse] = useState(false);
-  let checkbox = (
-    <label>
-      <input
-        type="checkbox"
-        checked={reverse}
-        onChange={e => setReverse(e.target.checked)}
-      />
-      Reverse order
-    </label>
-  );
-  if (reverse) {
-    return (
-      <>
-        <Field key="l" label="Last name" />
-        <Field key="f" label="First name" />
-        {checkbox}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Field key="f" label="First name" />
-        <Field key="l"  label="Last name" />
-        {checkbox}
-      </>
-    );
-  }
-}
-
-function Field({ label }) {
-  const [text, setText] = useState('');
+export default function TaskApp() {
   return (
-    <label>
-      {label}:{' '}
-      <input
-        type="text"
-        value={text}
-        placeholder={label}
-        onChange={e => setText(e.target.value)}
-      />
-    </label>
+    <TaskContext>
+      <h1>Day off in Kyoto</h1>
+      <AddTask/>
+      <TaskList/>
+    </TaskContext>
   );
 }
