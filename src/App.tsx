@@ -1,20 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function MyInput({ shouldFocus, value, onChange }) {
-  const ref = useRef(null);
+export default function Counter() {
+  const [count, setCount] = useState(0);
 
-  // TODO: shouldFocus가 true일때만 호출되도록
   useEffect(() => {
-    if(shouldFocus){
-      ref.current.focus();      
+    function onTick() {
+      setCount(c => c + 1);
     }
-  }, [shouldFocus]);
 
-  return (
-    <input
-      ref={ref}
-      value={value}
-      onChange={onChange}
-    />
-  );
+    const intervalId = setInterval(onTick, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return <h1>{count}</h1>;
 }
