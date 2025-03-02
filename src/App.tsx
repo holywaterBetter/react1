@@ -1,49 +1,25 @@
-import { useState, ChangeEvent } from "react";
+import { useState } from 'react';
 
-export default function EditProfile() { 
-  const [firstNameInput, setFirstNameInput] = useState("");
-  const [lastNameInput, setLastNameInput] = useState("");
-  const [isEdit, setIsEdit] = useState(true);
+export default function App() {
+  const [showHint, setShowHint] = useState(false);
+  
+  const code = <p><i>Hint: Your favorite city?</i></p>;
+  return <div>
+    {showHint && code}
+    <Form />
+    <button onClick={() => {
+      setShowHint(!showHint);
+    }}>{showHint? 'Hide hint' : 'Show hint'}</button>
+  </div>;
+}
 
-  function firstText() {
-    if(isEdit) {
-      return <input
-        title="firstNameInput"
-        value={firstNameInput}
-        onChange= {e => setFirstNameInput(e.target.value)}
-      />
-    }
-    return <b>{firstNameInput}</b>
-  }
-
-  function lastText() {
-    if(isEdit) {
-      return <input
-        title="lastNameInput"
-        value={lastNameInput}
-        onChange= {e => setLastNameInput(e.target.value)}
-      />
-    }
-    return <b>{lastNameInput}</b>
-  }
-
+function Form() {
+  const [text, setText] = useState('');
   return (
-    <div>
-      <form onSubmit={e => {
-        e.preventDefault();
-        setIsEdit(!isEdit);
-      }}>
-        <label>
-          First name: {firstText()}
-        </label>
-        <label>
-          Last name: {lastText()}
-        </label>
-        <button type="submit">
-          Edit Profile
-        </button>
-        <p><i>Hello, {firstNameInput} {lastNameInput}!</i></p>
-      </form>
-    </div>
+    <textarea
+      title='text'
+      value={text}
+      onChange={e => setText(e.target.value)}
+    />
   );
 }
