@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 
-export default function Counter() {
+export default function Timer() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    function onTick() {
+    console.log('✅ Creating an interval');
+    const id = setInterval(() => {
+      console.log('⏰ Interval tick');
       setCount(c => c + 1);
-    }
-
-    const intervalId = setInterval(onTick, 1000);
-    return () => clearInterval(intervalId);
+    }, 1000);
+    return () => {
+      console.log('❌ Clearing an interval');
+      clearInterval(id);
+    };
   }, []);
 
-  return <h1>{count}</h1>;
+  return <h1>Counter: {count}</h1>
 }
