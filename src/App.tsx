@@ -1,52 +1,30 @@
-import { useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-export default function CatFriends() {  
-  const [index, setIndex] = useState(0);
+function VideoPlayer({ src, isPlaying }) {
   const ref = useRef(null);
+
+  useEffect(() => {
+    if (isPlaying) {
+      ref.current.play();  
+    } else {
+      ref.current.pause();
+    }
+  })
+  
+  return <video ref={ref} src={src} loop playsInline />;
+}
+
+export default function App() {
+  const [isPlaying, setIsPlaying] = useState(false);
   return (
     <>
-      <nav>
-        <button onClick={() => {
-          if (index < catList.length - 1) {
-            setIndex(index + 1);
-          } else {
-            setIndex(0);
-          }
-                ref.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'center'
-          });
-        }}>
-          Next
-        </button>
-      </nav>
-      <div>
-        <ul>
-          {catList.map((cat, i) => (
-            <li key={cat.id} ref={index === i ? ref : null}>
-              <img
-                className={
-                  index === i ?
-                    'active' :
-                    ''
-                }
-                src={cat.imageUrl}
-                alt={'Cat #' + cat.id}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <button onClick={() => setIsPlaying(!isPlaying)}>
+        {isPlaying ? '일시정지' : '재생'}
+      </button>
+      <VideoPlayer
+        isPlaying={isPlaying}
+        src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+      />
     </>
   );
 }
-
-const catList = [];
-for (let i = 0; i < 10; i++) {
-  catList.push({
-    id: i,
-    imageUrl: 'https://loremflickr.com/250/200/cat?lock=' + i
-  });
-}
-
